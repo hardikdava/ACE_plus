@@ -7,4 +7,3 @@ gradio>=4.44.1
 scepter
 ms_swift
 numpy==1.26
-flash-attn

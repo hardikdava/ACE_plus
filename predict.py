@@ -124,21 +124,21 @@ class CogPredictor(BasePredictor):
                 default=None
             ),
             task_type: str = Input(
-                description="Task type",
+                description="Task type. Currently only subject mode is supported",
                 choices=['portrait', 'subject'],
                 default="subject"
             ),
             guidance_scale: float = Input(
                 description="Guidance scale",
-                default=30,
+                default=50,
                 ge=0,
-                le=50
+                le=600
             ),
             repaint_scale: float = Input(
                 description="The repainting scale for content filling generation!",
-                default=30,
+                default=1,
                 ge=0,
-                le=50
+                le=10
             ),
             seed: int = Input(
                 description="Random seed. Set for reproducible generation",
@@ -154,7 +154,7 @@ class CogPredictor(BasePredictor):
             ),
             num_inference_steps: int = Input(
                 description="Number of inference steps",
-                ge=1, le=50, default=30,
+                ge=1, le=50, default=28,
             ),
     ) -> Path:
 

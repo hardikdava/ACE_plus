@@ -81,11 +81,8 @@ MODEL_CACHE = "FLUX.1-dev"
 MODEL_NAME = "black-forest-labs/FLUX.1-dev"
 MODEL_URL = "https://weights.replicate.delivery/default/black-forest-labs/FLUX.1-dev/files.tar"
 
-SUBJECT_ACE_LORA_CACHE = "subject"
-PORTRAIT_ACE_LORA_CACHE = "portrait"
-
+SUBJECT_ACE_LORA_CACHE = "subject.safetensors"
 SUBJECT_ACE_LORA_URL = "https://huggingface.co/ali-vilab/ACE_Plus/resolve/main/subject/comfyui_subject_lora16.safetensors?download=true"
-PORTRAIT_ACE_LORA_URL = "https://huggingface.co/ali-vilab/ACE_Plus/resolve/main/portrait/comfyui_portrait_lora64.safetensors?download=true"
 
 
 class CogPredictor(BasePredictor):
@@ -97,10 +94,6 @@ class CogPredictor(BasePredictor):
         if not os.path.exists(SUBJECT_ACE_LORA_CACHE):
             download_weights(SUBJECT_ACE_LORA_URL, SUBJECT_ACE_LORA_CACHE)
             print("Downloaded subject lora weights")
-
-        if not os.path.exists(PORTRAIT_ACE_LORA_CACHE):
-            download_weights(PORTRAIT_ACE_LORA_URL, PORTRAIT_ACE_LORA_CACHE)
-            print("Downloaded portrait lora weights")
 
         diffuser_pipeline_config = "./config/ace_plus_diffuser_infer.yaml"
         self.pipe_cfg = Config(load=True, cfg_file=diffuser_pipeline_config)
@@ -172,7 +165,7 @@ class CogPredictor(BasePredictor):
         for task_name, task_model in task_model_cfg.MODEL.items():
             task_model_dict[task_name] = task_model
 
-        model_path = SUBJECT_ACE_LORA_CACHE if task_type == "subject" else PORTRAIT_ACE_LORA_CACHE
+        model_path = SUBJECT_ACE_LORA_URL
 
         # TODO: make it dynamic
         save_path = "output.jpg"

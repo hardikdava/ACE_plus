@@ -26,9 +26,9 @@ class ACEPlusDiffuserInference():
 
     def load_default(self, cfg):
         if cfg is not None:
-            self.input_cfg = {k.lower(): v for k, v in cfg.DEFAULT_PARAS.INPUT.items()}
-            self.input = {k.lower(): dict(v).get('DEFAULT', None) if isinstance(v, (dict, OrderedDict, Config)) else v for k, v in cfg.DEFAULT_PARAS.INPUT.items()}
-            self.output = {k.lower(): v for k, v in cfg.DEFAULT_PARAS.OUTPUT.items()}
+            self.input_cfg = {k.lower(): v for k, v in cfg.INPUT.items()}
+            self.input = {k.lower(): dict(v).get('DEFAULT', None) if isinstance(v, (dict, OrderedDict, Config)) else v for k, v in cfg.INPUT.items()}
+            self.output = {k.lower(): v for k, v in cfg.OUTPUT.items()}
 
     def init_from_cfg(self, cfg):
         self.max_seq_len = cfg.get("MAX_SEQ_LEN", 4096)

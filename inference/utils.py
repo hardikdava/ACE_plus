@@ -73,7 +73,6 @@ class ACEPlusImageProcessor():
 
         edit_image = edit_image * (1 - edit_mask * repainting_scale)
 
-
         out_h, out_w = edit_image.shape[-2:]
 
         assert edit_mask is not None

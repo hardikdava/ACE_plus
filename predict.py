@@ -81,12 +81,26 @@ MODEL_CACHE = "FLUX.1-dev"
 MODEL_NAME = "black-forest-labs/FLUX.1-dev"
 MODEL_URL = "https://weights.replicate.delivery/default/black-forest-labs/FLUX.1-dev/files.tar"
 
+SUBJECT_ACE_LORA_CACHE = "subject"
+PORTRAIT_ACE_LORA_CACHE = "portrait"
+
+SUBJECT_ACE_LORA_URL = "https://huggingface.co/ali-vilab/ACE_Plus/resolve/main/subject/comfyui_subject_lora16.safetensors?download=true"
+PORTRAIT_ACE_LORA_URL = "https://huggingface.co/ali-vilab/ACE_Plus/resolve/main/portrait/comfyui_portrait_lora64.safetensors?download=true"
+
 
 class CogPredictor(BasePredictor):
     def setup(self) -> None:
         if not os.path.exists(MODEL_CACHE):
             download_weights(MODEL_URL, ".")
             print("Downloaded flux weights")
+
+        if not os.path.exists(SUBJECT_ACE_LORA_CACHE):
+            download_weights(SUBJECT_ACE_LORA_URL, SUBJECT_ACE_LORA_CACHE)
+            print("Downloaded subject lora weights")
+
+        if not os.path.exists(PORTRAIT_ACE_LORA_CACHE):
+            download_weights(PORTRAIT_ACE_LORA_URL, PORTRAIT_ACE_LORA_CACHE)
+            print("Downloaded portrait lora weights")
 
         diffuser_pipeline_config = "./config/ace_plus_diffuser_infer.yaml"
         self.pipe_cfg = Config(load=True, cfg_file=diffuser_pipeline_config)
@@ -118,8 +132,8 @@ class CogPredictor(BasePredictor):
             ),
             task_type: str = Input(
                 description="Task type",
-                choices=['portrait', 'subject', 'local_editing'],
-                default="repainting"
+                choices=['portrait', 'subject'],
+                default="subject"
             ),
             guidance_scale: float = Input(
                 description="Guidance scale",
@@ -151,17 +165,14 @@ class CogPredictor(BasePredictor):
             ),
     ) -> Path:
 
-        model_paths = {}
-        model_paths["PORTRAIT"] = "ms://iic/ACE_Plus@portrait/comfyui_portrait_lora64.safetensors"
-        model_paths["SUBJECT"] = "ms://iic/ACE_Plus@subject/comfyui_subject_lora16.safetensors"
-        model_paths["LOCAL_EDITING"] = "ms://iic/ACE_Plus@local_editing/comfyui_local_editing_lora16.safetensors"
-
         # choose different model
         task_model = "./models/model_zoo.yaml"
         task_model_cfg = Config(load=True, cfg_file=task_model)
         task_model_dict = {}
         for task_name, task_model in task_model_cfg.MODEL.items():
             task_model_dict[task_name] = task_model
+
+        model_path = SUBJECT_ACE_LORA_CACHE if task_type == "subject" else PORTRAIT_ACE_LORA_CACHE
 
         # TODO: make it dynamic
         save_path = "output.jpg"
@@ -176,7 +187,7 @@ class CogPredictor(BasePredictor):
             "sample_steps": num_inference_steps,
             "guide_scale": guidance_scale,
             "repainting_scale": repaint_scale,
-            "model_path": FS.get_from(task_model_dict[task_type.upper()]["MODEL_PATH"])
+            "model_path": model_path,
         }
         local_path, seed = run_one_case(self.pipe, **params)
         return Path(local_path)

@@ -12,6 +12,9 @@ from scepter.modules.utils.logger import get_logger
 from transformers import T5TokenizerFast
 from .utils import ACEPlusImageProcessor
 
+
+MODEL_CACHE = "FLUX.1-dev"
+
 class ACEPlusDiffuserInference():
     def __init__(self, logger=None):
         if logger is None:
@@ -29,11 +32,8 @@ class ACEPlusDiffuserInference():
         self.max_seq_len = cfg.get("MAX_SEQ_LEN", 4096)
         self.image_processor = ACEPlusImageProcessor(max_seq_len=self.max_seq_len)
 
-        local_folder = FS.get_dir_to_local_dir(cfg.MODEL.PRETRAINED_MODEL)
-
-        self.pipe = FluxFillPipeline.from_pretrained(local_folder, torch_dtype=torch.bfloat16).to(we.device_id)
-
-        tokenizer_2 = T5TokenizerFast.from_pretrained(os.path.join(local_folder, "tokenizer_2"),
+        self.pipe = FluxFillPipeline.from_pretrained(MODEL_CACHE, torch_dtype=torch.bfloat16).to(we.device_id)
+        tokenizer_2 = T5TokenizerFast.from_pretrained(os.path.join(MODEL_CACHE, "tokenizer_2"),
                                                       additional_special_tokens=["{image}"])
         self.pipe.tokenizer_2 = tokenizer_2
         self.load_default(cfg.DEFAULT_PARAS)

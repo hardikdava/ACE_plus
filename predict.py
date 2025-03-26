@@ -95,7 +95,7 @@ class CogPredictor(BasePredictor):
             download_weights(SUBJECT_ACE_LORA_URL, SUBJECT_ACE_LORA_CACHE)
             print("Downloaded subject lora weights")
 
-        diffuser_pipeline_config = "./config/ace_plus_diffuser_infer.yaml"
+        diffuser_pipeline_config = "./config/ace_plus_diffusers_infer.yaml"
         self.pipe_cfg = Config(load=True, cfg_file=diffuser_pipeline_config)
         print("config pipeline loaded")
 

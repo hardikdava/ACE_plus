@@ -157,14 +157,6 @@ class CogPredictor(BasePredictor):
                 ge=1, le=50, default=28,
             ),
     ) -> Path:
-
-        # choose different model
-        task_model = "./models/model_zoo.yaml"
-        task_model_cfg = Config(load=True, cfg_file=task_model)
-        task_model_dict = {}
-        for task_name, task_model in task_model_cfg.MODEL.items():
-            task_model_dict[task_name] = task_model
-
         model_path = SUBJECT_ACE_LORA_URL
 
         # TODO: make it dynamic

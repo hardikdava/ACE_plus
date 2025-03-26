@@ -100,8 +100,6 @@ class ACEPlusDiffuserInference():
             with FS.get_from(lora_path) as local_path:
                 self.pipe.load_lora_weights(local_path)
 
-
-
         image = self.pipe(
             prompt=prompt,
             masked_image_latents=masked_image_latents,

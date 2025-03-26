@@ -1,10 +1,10 @@
 MODEL:
   PORTRAIT:
-    MODEL_PATH: ${PORTRAIT_MODEL_PATH}
+    MODEL_PATH: "ms://iic/ACE_Plus@portrait/comfyui_portrait_lora64.safetensors"
   SUBJECT:
-    MODEL_PATH: ${SUBJECT_MODEL_PATH}
+    MODEL_PATH: "ms://iic/ACE_Plus@subject/comfyui_subject_lora16.safetensors"
   LOCAL_EDITING:
-    MODEL_PATH: ${LOCAL_MODEL_PATH}
+    MODEL_PATH: "ms://iic/ACE_Plus@local_editing/comfyui_local_lora16.safetensors"
     REPAINTING_SCALE: 0.5
     PREPROCESSOR:
       - NAME: CannyAnnotator
